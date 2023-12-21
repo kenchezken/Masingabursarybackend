@@ -1,16 +1,11 @@
 import os
 
 from flask import Flask ,request
-from flask_sqlalchemy import SQLAlchemy
 from flask_restx import Api, Namespace, Resource, fields
 from models import User, TertiaryApplication ,db
 from flask_migrate import Migrate
 from flask_cors import CORS
-import secrets
 from flask_jwt_extended import JWTManager
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
-from jwt.exceptions import ExpiredSignatureError, DecodeError
-import jwt
 import os
 
 
