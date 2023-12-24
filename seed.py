@@ -36,11 +36,13 @@ with app.app_context():
     Applicationarray = []
     for i in range(20):
         Applicationobject = TertiaryApplication(
-         Fullname = fake.name() ,
+         Firstname = fake.name() ,
+         Middlename = fake.name() ,
+         Lastname = fake.name() ,
          Gender = random.choice(['Female' , 'Male']),
          Nationalid = random.choice(['37892469' , '11111111']) ,
          GuardiansNo = fake.name() ,
-         Motherid = fake.name() ,
+         Guardianid = fake.name() ,
          Disability = random.choice(['TRUE' , 'FALSE']) ,
          Ward = random.choice(['MASINGACENTRAL', 'EKALAKALAIKATINI' , 'MUTHESYA' , 'NDITHINI']) ,
          Location = random.choice(['Masinga central' , 'EkalakalaIkatini' , 'Muthesya']) ,

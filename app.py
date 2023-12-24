@@ -1,4 +1,3 @@
-import os
 
 from flask import Flask ,request
 from flask_restx import Api, Namespace, Resource, fields
@@ -11,7 +10,7 @@ import os
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://masingabackend_user:DUGhDP54CzfWQereBjumF0jqriPcsQEW@dpg-cm29kita73kc738kvlcg-a.oregon-postgres.render.com/masingabackend'
 
 # postgres://masingabackend_user:DUGhDP54CzfWQereBjumF0jqriPcsQEW@dpg-cm29kita73kc738kvlcg-a.oregon-postgres.render.com/masingabackend
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -35,19 +34,28 @@ api.add_namespace(ns)
 jwt = JWTManager(app)
 
 # --------------------------schemas------------------------------------
+
 tertiaryapplicationschema = api.model('tertiaryapplication', {
     'id' : fields.Integer,
-    'Fullname': fields.String(required=True, description='Name of the item'),
+    'Firstname': fields.String(required=True, description='Name of the item'),
+    'Middlename': fields.String(required=True, description='Name of the item') ,
+    'Lastname': fields.String(required=True, description='Name of the item') ,
+    'Phonenumber' :fields.String ,
     'Gender': fields.String(description='Description of the item'),
     'Nationalid': fields.String(description='URL of the item image'),
     'GuardiansNo': fields.String(description='User ID reporting the item') ,
-    'Motherid' : fields.String,
+    'Guardiansid' : fields.String,
     'Disability' : fields.String ,
     'Ward' : fields.String ,
     'Location' : fields.String ,
     'Sublocation' : fields.String ,
     'Village' : fields.String ,
+    'Chiefname' : fields.String ,
+    'Chiefphonenumber' : fields.String ,
+    'Assistantchief' : fields.String , 
     'Institution' : fields.String ,
+    'Amountexpecting' : fields.String ,
+    'Amountreceived' : fields.String ,
     'Admno' : fields.String , 
     'Modeofstudy' : fields.String ,
     'Yearofstudy' : fields.String ,
@@ -77,44 +85,58 @@ class PostItemlost(Resource):
             data = request.json  # Get the JSON data from the request
 
             #check whether fields are missing
-            fullname = data.get('fullname')
-            gender = data.get('gender')
-            phonenumber = data.get('phonenumber')
-            nationlid = data.get('nationid')
-            guardiansNo = data.get('guardiansno')
-            mothersid = data.get('mothersid')
-            disability = data.get('disability')
-            ward = data.get('ward')
-            location = data.get('location')
-            sublocation = data.get('sublocation')
-            village = data.get('village')
-            institution = data.get('institution')
-            admno = data.get('admno')
-            levelofstudy = data.get('levelofstudy')
-            modeofstudy = data.get('modeofstudy')
-            yearofstudy = data.get('yearofstudy')
-            semester = data.get('semester')
-            coarseduration = data.get('coarseduration')
-            family = data.get('family')
-            fathersincome = data.get('fathersincome')
-            mothersincome = data.get('mothersincome')
-            approvalstatus = data.get('approvalstatus')
+            firstname = data.get('Firstname')
+            middlename = data.get('Middlename')
+            lastname = data.get('Lastname')
+            gender = data.get('Gender')
+            phonenumber = data.get('Phonenumber')
+            nationlid = data.get('Nationalid')
+            guardiansNo = data.get('GuardiansNo')
+            guardiansid = data.get('Guardiansid')
+            disability = data.get('Disability')
+            ward = data.get('Ward')
+            location = data.get('Location')
+            sublocation = data.get('Sublocation')
+            village = data.get('Village')
+            chiefname = data.get('Chiefname')
+            chiefphonenumber = data.get('Chiefphonenumber')
+            assistantchiefname = data.get('Assistantchiefname')
+            institution = data.get('Institution')
+            amountexpecting = data.get('Amountexpecting')
+            amountreceived = data.get('Amountreceived')
+            admno = data.get('Admno')
+            levelofstudy = data.get('Levelofstudy')
+            modeofstudy = data.get('Modeofstudy')
+            yearofstudy = data.get('Yearofstudy')
+            semester = data.get('Semester')
+            coarseduration = data.get('Coarseduration')
+            family = data.get('Family')
+            fathersincome = data.get('Fathersincome')
+            mothersincome = data.get('Mothersincome')
+            approvalstatus = data.get('Approvalstatus')
 
         
             new_application = TertiaryApplication(
                 
-         Fullname = fullname ,
+         Firstname = firstname ,
+         Middlename = middlename ,
+         Lastname = lastname ,
          Gender = gender,
          Nationalid = nationlid ,
          Phonenumber = phonenumber ,
          GuardiansNo = guardiansNo ,
-         Motherid = mothersid ,
+         Guardianid = guardiansid ,
          Disability = disability,
          Ward = ward ,
          Location = location,
          Sublocation = sublocation ,
          Village = village ,
+         Chiefname = chiefname ,
+         Chiefphonenumber = chiefphonenumber ,
+         AssistantChiefname =assistantchiefname ,
          Instituition = institution ,
+         Amountexpecting = amountexpecting ,
+         Amountreceived = amountreceived ,
          Admno = admno ,
          levelofstudy = levelofstudy ,
          Modeofstudy = modeofstudy,
@@ -143,13 +165,34 @@ class PostItemlost(Resource):
             return {
                 "message": "Application created successfully",
                 "application": {
-                    "fullname": new_application.Fullname,
+                    "firstname": new_application.Firstname,
+                    "middlemen" : new_application.Middlename ,
+                    "lastname" : new_application.Lastname ,
                     "Gender": new_application.Gender,
+                    "Phonenumber" : new_application.Phonenumber ,
                     "Nationalid": new_application.Nationalid,
                     "GuardiansNo": new_application.GuardiansNo,
-                    'Mothersid': new_application.Motherid,
+                    'Guardiansid': new_application.Guardianid,
                     'Disability' : new_application.Disability ,
                     'Ward' : new_application.Ward ,
+                    'Location' : new_application.Location ,
+                    'Sublocation' : new_application.Sublocation ,
+                    'Village' : new_application.Village ,
+                    'Chiefname' : new_application.Chiefname ,
+                    'Chiefphonenumber' : new_application.Chiefphonenumber ,
+                    'AssistantChiefname' : new_application.AssistantChiefname ,
+                    'Instituition' : new_application.Instituition ,
+                    'Amountexpecting' : new_application.Amountexpecting ,
+                    'Amountreceived' : new_application.Amountreceived ,
+                    'Admno' : new_application.Admno ,
+                    'levelofstudy' : new_application.levelofstudy ,
+                    'Modeofstudy' : new_application.Modeofstudy ,
+                    'Yearofstudy' : new_application.Yearofstudy ,
+                    'Semester' : new_application.Semester ,
+                    'Coarseduration' :new_application.Coarseduration ,
+                    'Family' : new_application.Family ,
+                    'Fathersincome' : new_application.Fathersincome ,
+                    'Mothersincome' : new_application.Mothersincome ,
                     'Approvalstatus' : new_application.Approvalstatus
                 }
             }, 201
