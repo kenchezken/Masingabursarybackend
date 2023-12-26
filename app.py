@@ -115,6 +115,16 @@ class PostItemlost(Resource):
             mothersincome = data.get('Mothersincome')
             approvalstatus = data.get('Approvalstatus')
 
+            existing_application = TertiaryApplication.query.filter_by(Nationalid=nationlid).first()
+            if existing_application:
+                return {
+                    "message": "An application with this National ID already exists",
+                    "application": {
+                # You can return existing_application data if needed
+                    }
+                }, 409  # Using status code 409 for conflict
+
+
         
             new_application = TertiaryApplication(
                 
