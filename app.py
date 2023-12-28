@@ -44,7 +44,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Gender': fields.String(description='Description of the item'),
     'Nationalid': fields.String(description='URL of the item image'),
     'GuardiansNo': fields.String(description='User ID reporting the item') ,
-    'Guardiansid' : fields.String,
+    'Guardianid' : fields.String,
     'Disability' : fields.String ,
     'Ward' : fields.String ,
     'Location' : fields.String ,
@@ -52,8 +52,10 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Village' : fields.String ,
     'Chiefname' : fields.String ,
     'Chiefphonenumber' : fields.String ,
-    'Assistantchief' : fields.String , 
+    'AssistantChiefname' : fields.String ,
+    'Assistantchiefno' : fields.String , 
     'Institution' : fields.String ,
+    'University' :fields.String ,
     'Amountexpecting' : fields.String ,
     'Amountreceived' : fields.String ,
     'Admno' : fields.String , 
@@ -101,7 +103,9 @@ class PostItemlost(Resource):
             chiefname = data.get('Chiefname')
             chiefphonenumber = data.get('Chiefphonenumber')
             assistantchiefname = data.get('Assistantchiefname')
+            assistantchiefno = data.get('Assistantchiefno')
             institution = data.get('Institution')
+            university = data.get('University')
             amountexpecting = data.get('Amountexpecting')
             amountreceived = data.get('Amountreceived')
             admno = data.get('Admno')
@@ -144,7 +148,9 @@ class PostItemlost(Resource):
          Chiefname = chiefname ,
          Chiefphonenumber = chiefphonenumber ,
          AssistantChiefname =assistantchiefname ,
+         Assistantchiefno = assistantchiefno ,
          Instituition = institution ,
+         University = university ,
          Amountexpecting = amountexpecting ,
          Amountreceived = amountreceived ,
          Admno = admno ,
@@ -191,7 +197,9 @@ class PostItemlost(Resource):
                     'Chiefname' : new_application.Chiefname ,
                     'Chiefphonenumber' : new_application.Chiefphonenumber ,
                     'AssistantChiefname' : new_application.AssistantChiefname ,
+                    'Assistantchiefno' : new_application.Assistantchiefno ,
                     'Instituition' : new_application.Instituition ,
+                    'University' : new_application.University ,
                     'Amountexpecting' : new_application.Amountexpecting ,
                     'Amountreceived' : new_application.Amountreceived ,
                     'Admno' : new_application.Admno ,
@@ -222,7 +230,6 @@ class PostItemlost(Resource):
             data = request.get_json()
             # check whether data is missing 
             nationalid = data.get('Nationalid')
-          
             if not(nationalid):
                 return{
                     'message': 'Missing nationalid'
@@ -309,4 +316,98 @@ class ApproveBursaryApplication(Resource):
         else:
             return {"error": "Application not approved "}, 404
 
-    
+
+@ns.route('/Tertiaryapplication/<int:application_id>')  # Use the item_id as a parameter in the URL
+class UpdateApplication(Resource):
+
+    @ns.expect(tertiaryapplicationschema)
+    def put(self,application_id):
+        try:
+            # Attempt to retrieve the item with the given item_id
+            application= TertiaryApplication.query.get(application_id)
+
+            if application:
+                data = request.json  # Get the JSON data from the request
+                 
+
+   
+                application.Firstname  = data.get('Firstname')                              
+                application. Middlename = data.get('Middlename')
+                application.Lastname = data.get('Lastname')
+                application. Gender = data.get('Gender')
+                application. Phonenumber   = data.get('Phonenumber')
+                application.Nationalid = data.get('Nationalid')
+                application.GuardiansNo = data.get('GuardiansNo')
+                application.Guardianid = data.get('Guardiansid')
+                application.Disability = data.get('Disability')
+                application.Ward = data.get('Ward')
+                application. Location = data.get('Location')
+                application.Sublocation = data.get('Sublocation')
+                application.Village = data.get('Village')
+                application.Chiefname = data.get('Chiefname')
+                application.Chiefphonenumber = data.get('Chiefphonenumber')
+                application.AssistantChiefname = data.get('Assistantchiefname')
+                application. Assistantchiefno  = data.get('Assistantchiefno')
+                application.Instituition  = data.get('Institution')
+                application. University = data.get('University')
+                application. Amountexpecting = data.get('Amountexpecting')
+                application.Amountreceived  = data.get('Amountreceived')
+                application.Admno   = data.get('Admno')
+                application.levelofstudy  = data.get('Levelofstudy')
+                application.Modeofstudy = data.get('Modeofstudy')
+                application.Yearofstudy = data.get('Yearofstudy')
+                application.Semester  = data.get('Semester')
+                application.Coarseduration  = data.get('Coarseduration')
+                application.Family  = data.get('Family')
+                application.Fathersincome = data.get('Fathersincome')
+                application.Mothersincome = data.get('Mothersincome')
+              
+
+                db.session.commit()
+
+                return {
+                    "message": f"Application with ID {application_id} updated successfully",
+                    "lostitem": {
+                    "firstname": application.Firstname,
+                    "middlemen" : application.Middlename ,
+                    "lastname" : application.Lastname ,
+                    "Gender": application.Gender,
+                    "Phonenumber" : application.Phonenumber ,
+                    "Nationalid": application.Nationalid,
+                    "GuardiansNo": application.GuardiansNo,
+                    'Guardiansid': application.Guardianid,
+                    'Disability' : application.Disability ,
+                    'Ward' : application.Ward ,
+                    'Location' : application.Location ,
+                    'Sublocation' : application.Sublocation ,
+                    'Village' : application.Village ,
+                    'Chiefname' : application.Chiefname ,
+                    'Chiefphonenumber' : application.Chiefphonenumber ,
+                    'AssistantChiefname' : application.AssistantChiefname ,
+                    'Assistantchiefno' : application.Assistantchiefno ,
+                    'Instituition' : application.Instituition ,
+                    'University' : application.University ,
+                    'Amountexpecting' : application.Amountexpecting ,
+                    'Amountreceived' : application.Amountreceived ,
+                    'Admno' : application.Admno ,
+                    'levelofstudy' : application.levelofstudy ,
+                    'Modeofstudy' : application.Modeofstudy ,
+                    'Yearofstudy' : application.Yearofstudy ,
+                    'Semester' : application.Semester ,
+                    'Coarseduration' :application.Coarseduration ,
+                    'Family' : application.Family ,
+                    'Fathersincome' : application.Fathersincome ,
+                    'Mothersincome' : application.Mothersincome ,
+                    'Approvalstatus' : application.Approvalstatus
+                    }
+                }, 200
+            else:
+                return {
+                    "error": f"application with ID {application_id} not found"
+                }, 404
+        except Exception as e:
+            db.session.rollback()
+            return {
+                "message": "Failed to update the application",
+                 "error": str(e)
+            }, 500
