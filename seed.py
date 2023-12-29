@@ -13,7 +13,7 @@ with app.app_context():
     BursaryApproved = ['TRUE' , 'FALSE']
 
     User.query.delete()
-    TertiaryApplication.query.delete()
+    # TertiaryApplication.query.delete()
 
     print("🦸‍♀️ Seeding users...")
     
