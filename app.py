@@ -54,7 +54,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Chiefphonenumber' : fields.String ,
     'AssistantChiefname' : fields.String ,
     'Assistantchiefno' : fields.String , 
-    'Institution' : fields.String ,
+    'Instituition' : fields.String ,
     'University' :fields.String ,
     'Amountexpecting' : fields.String ,
     'Amountreceived' : fields.String ,
