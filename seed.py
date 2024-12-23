@@ -5,9 +5,10 @@ from datetime import datetime
 
 from models import db , User , TertiaryApplication
 
-fake = Faker()
+# fake = Faker()
 
 with app.app_context():
+
 
     Rolearray = ['Admin' , 'Student']
     BursaryApproved = ['TRUE' , 'FALSE']
@@ -31,7 +32,7 @@ with app.app_context():
         print(users)
         db.session.commit()
     
-    print("🦸‍♀️ seeding application...")
+    # print("🦸‍♀️ seeding application...")
 
     # Applicationarray = []
     # for i in range(5):

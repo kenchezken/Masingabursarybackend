@@ -53,6 +53,7 @@ class TertiaryApplication (db.Model):
     Family = db.Column(db.String)
     Fathersincome = db.Column(db.String)
     Mothersincome = db.Column(db.String)
+    Imageurl = db.Column(db.String)
     Approvalstatus = db.Column(db.String)
     
     created_at = db.Column(db.DateTime, server_default=db.func.now())

@@ -1,5 +1,6 @@
 
-from flask import Flask ,request
+from flask import Flask ,request , jsonify , send_from_directory , url_for
+from werkzeug.utils import secure_filename
 from flask_restx import Api, Namespace, Resource, fields
 from models import User, TertiaryApplication ,db
 from flask_migrate import Migrate
@@ -10,10 +11,23 @@ import os
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://masingabackend_user:DUGhDP54CzfWQereBjumF0jqriPcsQEW@dpg-cm29kita73kc738kvlcg-a.oregon-postgres.render.com/masingabackend'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 
 # postgres://masingabackend_user:DUGhDP54CzfWQereBjumF0jqriPcsQEW@dpg-cm29kita73kc738kvlcg-a.oregon-postgres.render.com/masingabackend
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
 
 # Initialize SQLAlchemy
 db.init_app(app)
@@ -52,13 +66,15 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Village' : fields.String ,
     'Chiefname' : fields.String ,
     'Chiefphonenumber' : fields.String ,
-    'AssistantChiefname' : fields.String ,
+    'Assistantchiefname' : fields.String ,
     'Assistantchiefno' : fields.String , 
+    
     'Instituition' : fields.String ,
     'University' :fields.String ,
     'Amountexpecting' : fields.String ,
     'Amountreceived' : fields.String ,
     'Admno' : fields.String , 
+    'Levelofstudy' : fields.String , 
     'Modeofstudy' : fields.String ,
     'Yearofstudy' : fields.String ,
     'Semester'  : fields.String ,
@@ -67,6 +83,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Fathersincome' : fields.String ,
     'Mothersincome' : fields.String ,
     'Approvalstatus' : fields.String ,
+    'Imageurl' : fields.String
 })
 
 user_login_schema =api.model('login' , {
@@ -79,12 +96,43 @@ admin_login_schema =api.model('login' , {
 })
 
 #--------------------------------------end of schemas---------------------------------------
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part in the request'}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        image_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        return jsonify({'message': 'File uploaded successfully', 'Imageurl': image_url}), 200
+
+    return jsonify({'error': 'Invalid file type'}), 400
+
+
+
+@app.route('/uploads/<filename>', methods=['GET'])
+def get_image(filename):
+
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
 @ns.route('/tertiaryapplication')
 class PostItemlost(Resource):
     @ns.expect(tertiaryapplicationschema)
     def post(self):
         try:
             data = request.json  # Get the JSON data from the request
+
+            print(data
+                  )
 
             #check whether fields are missing
             firstname = data.get('Firstname')
@@ -94,7 +142,7 @@ class PostItemlost(Resource):
             phonenumber = data.get('Phonenumber')
             nationlid = data.get('Nationalid')
             guardiansNo = data.get('GuardiansNo')
-            guardiansid = data.get('Guardiansid')
+            guardiansid = data.get('Guardianid')
             disability = data.get('Disability')
             ward = data.get('Ward')
             location = data.get('Location')
@@ -104,6 +152,7 @@ class PostItemlost(Resource):
             chiefphonenumber = data.get('Chiefphonenumber')
             assistantchiefname = data.get('Assistantchiefname')
             assistantchiefno = data.get('Assistantchiefno')
+                                          
             institution = data.get('Instituition')
             university = data.get('University')
             amountexpecting = data.get('Amountexpecting')
@@ -118,8 +167,10 @@ class PostItemlost(Resource):
             fathersincome = data.get('Fathersincome')
             mothersincome = data.get('Mothersincome')
             approvalstatus = data.get('Approvalstatus')
+            image_url = data.get('Imageurl')
 
             existing_application = TertiaryApplication.query.filter_by(Nationalid=nationlid).first()
+            
             if existing_application:
                 return {
                     "message": "An application with this National ID already exists",
@@ -162,6 +213,7 @@ class PostItemlost(Resource):
          Family = family ,
          Fathersincome = fathersincome ,
          Mothersincome = mothersincome ,
+         Imageurl = image_url ,
          Approvalstatus = approvalstatus
             )
 
@@ -177,6 +229,8 @@ class PostItemlost(Resource):
 
             db.session.add(new_user)
             db.session.commit()
+
+            print (new_application.Imageurl)
 
             return {
                 "message": "Application created successfully",
@@ -211,10 +265,11 @@ class PostItemlost(Resource):
                     'Family' : new_application.Family ,
                     'Fathersincome' : new_application.Fathersincome ,
                     'Mothersincome' : new_application.Mothersincome ,
-                    'Approvalstatus' : new_application.Approvalstatus
+                    'Approvalstatus' : new_application.Approvalstatus ,
+                    'imageurl' : new_application.Imageurl
                 }
             }, 201
-
+    
         except Exception as e:
             db.session.rollback()
             return {
@@ -241,8 +296,6 @@ class PostItemlost(Resource):
                 return {
                     'message' : 'could Not Verify'
                 } , 401
-            
-           
             return {
                 'id' : user.Nationalid ,
                 'Role' : user.Role
@@ -274,6 +327,8 @@ class Adminlogin(Resource):
         } , 201
         
 
+
+
 #fetch by id
 @ns.route('/mydetails/<string:nationalid>')
 class Users(Resource):
@@ -303,6 +358,29 @@ class UsersByWard(Resource):
             return {"message": f"No applications found for Ward: {wardname}"}, 404
         return users, 200
 
+
+ 
+@ns.route('/<int:item_id>')
+@ns.response(404, 'Item not found')
+@ns.response(500, 'Internal Server Error')
+class ItemResource(Resource):
+    @ns.response(200, 'Item deleted successfully')
+    def delete(self, item_id):
+
+     try:
+            # Find the item by ID
+            student = TertiaryApplication.query.get(item_id)
+            if not student:
+                return {'message': 'Item not found'}, 404
+            
+            # Delete the item
+            db.session.delete(student)
+            db.session.commit()
+            return {'message': f'Item with ID {item_id} deleted successfully'}, 200
+     except Exception as e:
+            return {'message': str(e)}, 500
+
+
 #ApproveBursary
 @ns.route('/approveBursaryapplication/<int:item_id>')
 class ApproveBursaryApplication(Resource):
@@ -328,9 +406,7 @@ class UpdateApplication(Resource):
 
             if application:
                 data = request.json  # Get the JSON data from the request
-                 
-
-   
+                print(data)
                 application.Firstname  = data.get('Firstname')                              
                 application. Middlename = data.get('Middlename')
                 application.Lastname = data.get('Lastname')
@@ -411,3 +487,4 @@ class UpdateApplication(Resource):
                 "message": "Failed to update the application",
                  "error": str(e)
             }, 500
+        
