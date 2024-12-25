@@ -111,7 +111,7 @@ def upload_file():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        image_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        image_url = f"https://masingabursarybackend.onrender.com/uploads/{filename}"
         return jsonify({'message': 'File uploaded successfully', 'Imageurl': image_url}), 200
 
     return jsonify({'error': 'Invalid file type'}), 400
