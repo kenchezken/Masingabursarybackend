@@ -37,7 +37,7 @@ class TertiaryApplication (db.Model):
     Sublocation = db.Column(db.String)
     Village = db.Column(db.String)
     Chiefname =db.Column(db.String)
-    Chiefphonenumber = db.Column(db.Integer)
+    Chiefphonenumber = db.Column(db.String)
     AssistantChiefname =db.Column(db.String)
     Assistantchiefno = db.Column(db.String)
     Instituition = db.Column(db.String)

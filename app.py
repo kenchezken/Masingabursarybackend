@@ -11,7 +11,7 @@ import os
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://masingabursarydb_user:8iEaXZtdu8GcJ5Ptf4dnsJn9cJdB8Ibr@dpg-ctlgrulumphs73da1f5g-a.oregon-postgres.render.com/masingabursarydb'
 
 # postgres://masingabackend_user:DUGhDP54CzfWQereBjumF0jqriPcsQEW@dpg-cm29kita73kc738kvlcg-a.oregon-postgres.render.com/masingabackend
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
