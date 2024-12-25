@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://masingabursarydb_user:8iEa
 # postgres://masingabackend_user:DUGhDP54CzfWQereBjumF0jqriPcsQEW@dpg-cm29kita73kc738kvlcg-a.oregon-postgres.render.com/masingabackend
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = '/var/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -87,7 +87,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
 })
 
 user_login_schema =api.model('login' , {
-   'Nationalid' : fields.Integer,
+   'Nationalid' : fields.String,
 })
 
 admin_login_schema =api.model('login' , {
