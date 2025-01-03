@@ -67,8 +67,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Chiefname' : fields.String ,
     'Chiefphonenumber' : fields.String ,
     'AssistantChiefname' : fields.String ,
-    'Assistantchiefno' : fields.String , 
-    
+    'Assistantchiefno' : fields.String ,   
     'Instituition' : fields.String ,
     'University' :fields.String ,
     'Amountexpecting' : fields.String ,
@@ -307,24 +306,45 @@ class Adminlogin(Resource):
     @ns.expect(admin_login_schema)
     def post(self):
         data = request.get_json()
-        # check whether data is missing or if the username or 'password' are missing
+
+        # Extract the phone number and password
         phonenumber = data.get('Phonenumber')
         password = data.get('password')
-        if not(phonenumber and password):
-            return{
-                'message': 'Missing username , password'
-            } , 400
-        
-  # query to database to find the user with the provided phonenumber
-        user = User.query.filter_by(Phonenumber = phonenumber).first()
+
+        # Check if phone number and password are provided
+        if not (phonenumber and password):
+            return {
+                'message': 'Missing username or password'
+            }, 400
+
+        # Validate the phone number
+        if phonenumber != '0724676585':
+            return {
+                'message': 'Approval Denied: Unauthorized phone number'
+            }, 403  # 403 Forbidden for unauthorized access
+
+        # Query the database to find the user with the provided phone number
+        user = User.query.filter_by(Phonenumber=phonenumber).first()
         if not user:
             return {
-                'message' : 'could Not Verify'
-            } , 401
-        
+                'message': 'Could Not Verify'
+            }, 401
+
+        # Additional checks for password can be added here if needed
+
         return {
-            'nationalid' : user.Nationalid 
-        } , 201
+            'nationalid': user.Nationalid
+        }, 201
+
+
+
+
+
+
+
+
+
+
         
 
 
