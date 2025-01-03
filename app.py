@@ -66,7 +66,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Village' : fields.String ,
     'Chiefname' : fields.String ,
     'Chiefphonenumber' : fields.String ,
-    'Assistantchiefname' : fields.String ,
+    'AssistantChiefname' : fields.String ,
     'Assistantchiefno' : fields.String , 
     
     'Instituition' : fields.String ,
@@ -74,7 +74,7 @@ tertiaryapplicationschema = api.model('tertiaryapplication', {
     'Amountexpecting' : fields.String ,
     'Amountreceived' : fields.String ,
     'Admno' : fields.String , 
-    'Levelofstudy' : fields.String , 
+    'levelofstudy' : fields.String , 
     'Modeofstudy' : fields.String ,
     'Yearofstudy' : fields.String ,
     'Semester'  : fields.String ,
@@ -150,15 +150,15 @@ class PostItemlost(Resource):
             village = data.get('Village')
             chiefname = data.get('Chiefname')
             chiefphonenumber = data.get('Chiefphonenumber')
-            assistantchiefname = data.get('Assistantchiefname')
+            assistantchiefname = data.get('AssistantChiefname')
             assistantchiefno = data.get('Assistantchiefno')
                                           
             institution = data.get('Instituition')
             university = data.get('University')
             amountexpecting = data.get('Amountexpecting')
             amountreceived = data.get('Amountreceived')
-            admno = data.get('Admno')
-            levelofstudy = data.get('Levelofstudy')
+            admno = data.get('Admno') 
+            levelofstudy = data.get('levelofstudy')
             modeofstudy = data.get('Modeofstudy')
             yearofstudy = data.get('Yearofstudy')
             semester = data.get('Semester')
@@ -315,7 +315,7 @@ class Adminlogin(Resource):
                 'message': 'Missing username , password'
             } , 400
         
-        # query to database to find the user with the provided phonenumber
+  # query to database to find the user with the provided phonenumber
         user = User.query.filter_by(Phonenumber = phonenumber).first()
         if not user:
             return {
@@ -414,22 +414,22 @@ class UpdateApplication(Resource):
                 application. Phonenumber   = data.get('Phonenumber')
                 application.Nationalid = data.get('Nationalid')
                 application.GuardiansNo = data.get('GuardiansNo')
-                application.Guardianid = data.get('Guardiansid')
+                application.Guardianid = data.get('Guardianid')
                 application.Disability = data.get('Disability')
                 application.Ward = data.get('Ward')
                 application. Location = data.get('Location')
                 application.Sublocation = data.get('Sublocation')
                 application.Village = data.get('Village')
                 application.Chiefname = data.get('Chiefname')
-                application.Chiefphonenumber = data.get('Chiefphonenumber')
-                application.AssistantChiefname = data.get('Assistantchiefname')
+                application.Chiefphonenumber = data.get('Chiefphonenumber') 
+                application.AssistantChiefname = data.get('AssistantChiefname') 
                 application. Assistantchiefno  = data.get('Assistantchiefno')
                 application.Instituition  = data.get('Instituition')
                 application. University = data.get('University')
                 application. Amountexpecting = data.get('Amountexpecting')
                 application.Amountreceived  = data.get('Amountreceived')
                 application.Admno   = data.get('Admno')
-                application.levelofstudy  = data.get('Levelofstudy')
+                application.levelofstudy  = data.get('levelofstudy')
                 application.Modeofstudy = data.get('Modeofstudy')
                 application.Yearofstudy = data.get('Yearofstudy')
                 application.Semester  = data.get('Semester')
@@ -451,13 +451,14 @@ class UpdateApplication(Resource):
                     "Phonenumber" : application.Phonenumber ,
                     "Nationalid": application.Nationalid,
                     "GuardiansNo": application.GuardiansNo,
-                    'Guardiansid': application.Guardianid,
+                    'Guardianid': application.Guardianid,
                     'Disability' : application.Disability ,
                     'Ward' : application.Ward ,
                     'Location' : application.Location ,
                     'Sublocation' : application.Sublocation ,
                     'Village' : application.Village ,
                     'Chiefname' : application.Chiefname ,
+                    
                     'Chiefphonenumber' : application.Chiefphonenumber ,
                     'AssistantChiefname' : application.AssistantChiefname ,
                     'Assistantchiefno' : application.Assistantchiefno ,
